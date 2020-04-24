@@ -1,0 +1,51 @@
+## Start of FOG Settings
+## Created by the FOG Installer
+## Find more information about this file in the FOG Project wiki:
+##     https://wiki.fogproject.org/wiki/index.php?title=.fogsettings
+## Version: 1.5.4.8
+## Install time: Wed 01 Aug 2018 06:57:53 PM CDT
+ipaddress='{{ ansible_default_ipv4.address }}'
+copybackold='0'
+interface='{{ ansible_default_ipv4.interface }}'
+submask='{{ ansible_default_ipv4.netmask }}'
+routeraddress='{{ ansible_default_ipv4.gateway }}'
+plainrouter='{{ ansible_default_ipv4.gateway }}'
+dnsaddress='{{ fog_settings.dns }}'
+username='{{ fog_user }}'
+password='{{ fog_user_password }}'
+osid='{{ fog_settings.os[ansible_os_family] }}'
+osname='{{ ansible_distribution }}'
+{% if fog_settings.install_dhcp %}
+dodhcp='Y'
+dhcpd='isc-dhcp-server'
+{% else %}
+dodhcp='N'
+bldhcp='0'
+dhcpd=''
+{% endif %}
+blexports='1'
+installtype='N'
+snmysqlrootpass='{{ mysql_password }}'
+snmysqluser='fogmaster'
+snmysqlpass='{{ mysql_password }}'
+snmysqlhost='localhost'
+mysqldbname='fog'
+installlang='0'
+storageLocation='{{ fog_settings.storage_location }}'
+fogupdateloaded=1
+docroot='/var/www/'
+webroot='fog/'
+caCreated='yes'
+httpproto='http'
+startrange=''
+endrange=''
+bootfilename='undionly.kpxe'
+packages='bc curl gcc gcc-c++ genisoimage git gzip httpd lftp m4 make mariadb mariadb-server mod_ssl mtools net-tools nfs-utils php php-bcmath php-cli php-common php-fpm php-gd php-ldap php-mbstring php-mysqlnd php-process syslinux tar tftp-server unzip vsftpd wget xinetd xz-devel '
+noTftpBuild=''
+notpxedefaultfile=''
+sslpath='/opt/fog/snapins/ssl/'
+backupPath='/home/'
+php_ver=''
+php_verAdds=''
+sslprivkey='/opt/fog/snapins/ssl//.srvprivate.key'
+## End of FOG Settings

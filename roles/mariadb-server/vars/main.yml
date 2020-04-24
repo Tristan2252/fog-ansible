@@ -1,0 +1,17 @@
+---
+
+mysql_python_package:
+  CentOS: MySQL-python
+  Ubuntu: python-mysqldb
+
+mariadb_conf_dir:
+  CentOS: /etc/my.cnf.d/my.cnf
+  Ubuntu: /etc/mysql/mariadb.conf.d/90-nextcloud.cnf
+
+mariadb_sock_dir:
+  CentOS: /var/lib/mysql/mysql.sock
+  Ubuntu: /var/run/mysqld/mysqld.sock
+
+mariadb_pid_dir:
+  CentOS: /var/lib/mysql/mysql.pid
+  Ubuntu: /var/run/mysqld/mysqld.pid

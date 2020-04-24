@@ -1,0 +1,14 @@
+---
+
+fog_user: fog
+fog_branch: master
+fog_user_password: "password"
+mysql_password: "password"
+
+fog_settings:
+    dns: 1.1.1.1
+    os:
+      RedHat: 1
+      Debian: 2
+    install_dhcp: false
+    storage_location: "/images"

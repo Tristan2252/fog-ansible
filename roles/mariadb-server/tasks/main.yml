@@ -1,0 +1,81 @@
+---
+
+- assert:
+    that: mariadb_root_password is defined
+
+- name: Install mariadb
+  package:
+    name:
+      - mariadb-server
+      - "{{ mysql_python_package[ansible_distribution] }}"
+    state: present
+
+- name: create conf dir
+  file:
+    name: "{{ mariadb_conf_dir[ansible_distribution] | dirname }}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+  #- name: configure mariadb
+  #  template:
+  #    src: my.cnf.j2
+  #    dest: "{{ mariadb_conf_dir[ansible_distribution] }}"
+  #    owner: root
+  #    group: root
+  #    mode: 0644
+  #  notify: restart mariadb
+
+- name: Start and Enable mariadb
+  service:
+    name: mariadb
+    state: started
+    enabled: True
+
+# This command will fail when the root password was set previously
+- name: Check if root password is set
+  shell: mysqladmin -u root status
+  changed_when: false
+  failed_when: false
+  register: root_pwd_check
+
+- name: Set MariaDB root password for the first time (root@localhost)
+  mysql_user:
+    name: root
+    password: "{{ mariadb_root_password }}"
+    host: localhost
+    login_unix_socket: "{{ mariadb_sock_dir[ansible_distribution] }}"
+    state: present
+  when: root_pwd_check.rc == 0
+
+- name: Set MariaDB root password for 127.0.0.1, ::1
+  mysql_user:
+    name: root
+    password: "{{ mariadb_root_password }}"
+    host: "{{ item }}"
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ mariadb_sock_dir[ansible_distribution] }}"
+    state: present
+  with_items:
+    - ::1
+    - 127.0.0.1
+  when: root_pwd_check.rc == 0
+
+- name: Remove anonymous users
+  mysql_user:
+    name: ''
+    host_all: true
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ mariadb_sock_dir[ansible_distribution] }}"
+    state: absent
+
+- name: Remove the test database
+  mysql_db:
+    name: test
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ mariadb_sock_dir[ansible_distribution] }}"
+    state: absent

@@ -1,0 +1,69 @@
+---
+
+- name: Install sudo
+  package:
+    name: sudo
+    state: present
+
+- name: Create FOG user
+  user:
+    name: "{{ fog_user  }}"
+    shell: /bin/bash
+    group: wheel
+    append: yes
+    createhome: yes
+
+- name: Install Firewalld
+  package:
+    name: firewalld
+    state: present
+
+- name: Allow FOG Project services
+  firewalld:
+    service: "{{ item }}"
+    zone: public
+    state: enabled
+    permanent: yes
+  with_items:
+    - http
+    - https
+    - tftp
+    - ftp
+    - mysql
+    - nfs
+    - mountd
+    - rpc-bind
+    - proxy-dhcp
+    - samba
+    - dhcp
+    - dns
+
+- name: Allow possible used ports for fog multicast
+  firewalld:
+    port: 49152-65532/udp
+    zone: public
+    state: enabled
+    permanent: yes
+
+#- name: Allow IGMP traffic for multicast
+#  firewalld:
+#    rich_rule: ipv4 filter INPUT 0 -p igmp -j ACCEPT
+#    permanent: yes
+#    state: enabled
+
+- name: Clone FOG
+  git:
+    repo: https://github.com/FOGProject/fogproject.git
+    dest: "/home/{{ fog_user  }}/fog"
+    version: "{{ fog_branch  }}"
+
+- name: copy over install template
+  template:
+    src: fogpriorconfig.j2
+    dest: "/home/{{ fog_user  }}/install_settings"
+
+- name: Install FOG
+  shell: "./installfog.sh -Y -f /home/{{ fog_user  }}/install_settings"
+  args:
+    chdir: "/home/{{ fog_user  }}/fog/bin"
+    creates: /opt/fog/.fogsettings
