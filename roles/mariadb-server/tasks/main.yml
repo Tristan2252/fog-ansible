@@ -18,15 +18,6 @@
     mode: 0755
     state: directory
 
-  #- name: configure mariadb
-  #  template:
-  #    src: my.cnf.j2
-  #    dest: "{{ mariadb_conf_dir[ansible_distribution] }}"
-  #    owner: root
-  #    group: root
-  #    mode: 0644
-  #  notify: restart mariadb
-
 - name: Start and Enable mariadb
   service:
     name: mariadb

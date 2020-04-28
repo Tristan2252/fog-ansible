@@ -45,12 +45,6 @@
     state: enabled
     permanent: yes
 
-#- name: Allow IGMP traffic for multicast
-#  firewalld:
-#    rich_rule: ipv4 filter INPUT 0 -p igmp -j ACCEPT
-#    permanent: yes
-#    state: enabled
-
 - name: Clone FOG
   git:
     repo: https://github.com/FOGProject/fogproject.git
@@ -69,9 +63,8 @@
     creates: /opt/fog/.fogsettings
   environment:
     snmysqlrootpass: "{{ mysql_password }}"
-    
+
 - name: Remove Install template
   file:
     path: "/home/{{ fog_user  }}/install_settings"
     state: absent
-    
