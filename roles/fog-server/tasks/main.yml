@@ -61,8 +61,6 @@
   args:
     chdir: "/home/{{ fog_user  }}/fog/bin"
     creates: /opt/fog/.fogsettings
-  environment:
-    snmysqlrootpass: "{{ mysql_password }}"
 
 - name: Remove Install template
   file:
