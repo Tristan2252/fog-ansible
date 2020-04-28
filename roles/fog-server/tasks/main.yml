@@ -63,7 +63,15 @@
     dest: "/home/{{ fog_user  }}/install_settings"
 
 - name: Install FOG
-  shell: "./installfog.sh -Y -f /home/{{ fog_user  }}/install_settings"
+  shell: "./installfog.sh -Y -f /home/{{ fog_user }}/install_settings <<< $'{{ mariadb_root_password }}\n'"
   args:
     chdir: "/home/{{ fog_user  }}/fog/bin"
     creates: /opt/fog/.fogsettings
+  environment:
+    snmysqlrootpass: "{{ mysql_password }}"
+    
+- name: Remove Install template
+  file:
+    path: "/home/{{ fog_user  }}/install_settings"
+    state: absent
+    
