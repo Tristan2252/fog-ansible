@@ -1,20 +1,24 @@
 ---
 
+##################
+# to run this file: ansible-playbook fog-server.yml
+#################
+
 - name: Setup Fog Server
   hosts: 127.0.0.1
   connection: local
   vars:
       fog_user: fog
-      fog_user_password: "password"
-      mysql_password: "password"
-      mariadb_root_password: "password"
+      fog_user_password:        # Add ansible-vault password here
+      mysql_password:           # Add ansible-vault password here
+      mariadb_root_password:    # Add ansible-vault password here
       fog_settings:
-          dns: 1.1.1.1
+          dns: 1.1.1.1          # set DNS for fog server
           os:
               RedHat: 1
               Debian: 2
           install_dhcp: false
-          storage_location: "/images"
+          storage_location: "/images"     # set image storage location
   roles:
       - mariadb-server
       - fog-server
